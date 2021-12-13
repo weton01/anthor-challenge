@@ -1,26 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ReviewEntity } from '../../reviews/entities/review.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
 
-@Entity({ name: 'users' })
-export class UserEntity {
+@Entity({ name: 'comments' })
+export class CommentEntity {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string;
 
   @Column({ unique: true })
   @ApiProperty()
-  email: string;
+  description: string;
 
   @Column()
   @ApiProperty()
-  password: string;
+  userId: string;
 
   @CreateDateColumn({ name: 'created_at' })
   @ApiProperty()
@@ -33,11 +36,15 @@ export class UserEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   @ApiProperty()
   deletedAt: string;
+ 
+  @ManyToOne(type => ReviewEntity )
+  @JoinColumn({name: 'entityId'})
+  review: ReviewEntity;
 
-  constructor(user?: Partial<UserEntity>) {
+  constructor(user?: Partial<CommentEntity>) {
     this.id = user?.id;
-    this.email = user?.email;
-    this.password = user?.password;
+    this.description = user?.description;
+    this.description = user?.description;
     this.createdAt = user?.createdAt;
     this.updatedAt = user?.updatedAt;
     this.deletedAt = user?.deletedAt;
